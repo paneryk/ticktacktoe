@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A TickTackToe Game</title>
+    <script src="./main.js" defer type="module"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <form>
+        <fieldset>
+        <legend>Player 1:</legend>
+    
+            <label for="playerOneName">Name:</label>
+            <input type="text" id="playerOneName">
+    
+            <p>Select symbol:</p>
+    
+            <input type="radio" id="crossOne" name="selectSymbolOne" value="x">
+            <label for="crossOne">X</label>
+    
+            <input type="radio" id="circleOne" name="selectSymbolOne" value="o">
+            <label for="circleOne">O</label>
+        </fieldset>
+    
+        <fieldset>
+        <legend>Player 2:</legend>
+    
+            <label for="playerTwoName">Name:</label>
+            <input type="text" id="playerTwoName">
+    
+            <p>Select symbol:</p>
+    
+            <input type="radio" id="crossTwo" name="selectSymbolTwo" value="x">
+            <label for="crossTwo">X</label>
+    
+            <input type="radio" id="circleTwo" name="selectSymbolTwo" value="o">
+            <label for="circleTwo">O</label>
+        </fieldset>
+        <fieldset>
+            <legend>Draw a starting player:</legend>
+                <button type="button" id="startingPlayerButton">Draw</button>
+                <p id="startingPlayer" class="invisible">Player <span></span> will start a game</p>
+            </fieldset>
+        
+        <br>
+        <button type="submit" id="startGameButton">Start a game</button>
+        </form>
+
+    <div id="interface"> </div>
+
+
+    
+</body>
+</html>
