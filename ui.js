@@ -5,9 +5,34 @@ export const ui = (() => {
     const renderStartScreen = (boolean) => {
         const startScreen = document.querySelector('form');
         const startButton = document.getElementById('startGameButton');
+
+        const crossOne = document.getElementById('crossOne');
+        const crossTwo = document.getElementById('crossTwo');
+        const circleOne = document.getElementById('circleOne');
+        const circleTwo = document.getElementById('circleTwo');
+
+        const startingPlayerButton = document.getElementById('startingPlayerButton');
+        const startingPlayerPar = document.querySelector('#startingPlayer');
+        const startingPlayerSpan = document.querySelector('#startingPlayer span');
+
+        crossOne.addEventListener('change', () => {
+            if (crossOne.checked) circleTwo.checked = true;
+        })
+        circleOne.addEventListener('change', () => {
+            if (circleOne.checked) crossTwo.checked = true;
+        })
+
+        let startingPlayer = 1;
+
+        startingPlayerButton.addEventListener('click', () => {
+            startingPlayerPar.classList.remove('invisible');
+            startingPlayer = Math.floor(Math.random()*2+1);
+            startingPlayerSpan.textContent = startingPlayer;
+        })
+
         const startClick = (evt) => {
             evt.preventDefault(); 
-            communication.publish('gameStart');
+            communication.publish('gameStart', startingPlayer);
             renderStartScreen(false);
         }
         if (boolean) { 
@@ -39,6 +64,45 @@ export const ui = (() => {
             }    
         }
     }
+
+    const drawStats = () => {
+        const gameInterface = document.getElementById('interface');
+        const statDiv = document.createElement('div');
+        statDiv.classList.add('stats');
+        const pOne = document.createElement('p');
+        pOne.classList.add('playerOne');
+        const pTwo = document.createElement('p');
+        pTwo.classList.add('playerTwo');
+        const turn = document.createElement('p');
+        turn.classList.add('turn');
+        
+        statDiv.append(turn, pOne, pTwo);
+        gameInterface.append(statDiv);
+    }
+
+    const updateStats = (object) => {
+        const pOne = document.querySelector('.playerOne');
+        const turn = document.querySelector('.turn');
+        const pTwo = document.querySelector('.playerTwo');
+        const statDiv = document.querySelector('.stats');
+        turn.textContent = 'You\'re playing round number '+object.gameStats.turns
+        pOne.textContent = object.players.playerOne.player + ' (' + object.players.playerOne.symbol + '): ' + object.players.playerOne.wins;
+        pTwo.textContent = object.players.playerTwo.player + ' (' + object.players.playerTwo.symbol + '): ' + object.players.playerTwo.wins;
+        if (object.gameStats.currentPlayer === object.players.playerOne) { pOne.classList.add('selected'); pTwo.classList.remove('selected');}
+        else { pTwo.classList.add('selected');  pOne.classList.remove('selected');}
+        if (object.gameStats.win === true || object.gameStats.draw === true) {
+            pOne.classList.remove('selected'); 
+            pTwo.classList.remove('selected');
+            if (object.gameStats.win === true) {
+                turn.textContent = 'The winner of turn no '+(object.gameStats.turns-1)+' is: '+object.gameStats.winner.player;
+            }
+            else {
+                turn.textContent = 'We have a DRAW in turn no '+(object.gameStats.turns-1);
+            }
+        }
+    }
+
+
     const drawSymbol = (object) => {
         object.clickedSquare.target.textContent = object.gameStats.currentPlayer.symbol;   
     }
@@ -62,25 +126,36 @@ export const ui = (() => {
             winningSquare.classList.add('winningSquare');
             }
         }
+        
         console.log('The winner is: ')
         console.log(object.gameStats.winner)
 
         //creating replay button
+        createReplay();
+    }
+
+    const createReplay = () => {
         const gameInterface = document.getElementById('interface');
         const replayButton = document.createElement('button');
         replayButton.classList.add('replayButton');
         replayButton.textContent = 'Replay';
         gameInterface.append(replayButton);
         replayButton.addEventListener('click', () => { communication.publish('gameReplay'); clearUI();  const button = document.querySelector('.replayButton'); button.remove(gameInterface)})
+        
     }
     const clearUI = () => {
         const singleSquares = document.querySelectorAll('.squareDiv');
-        singleSquares.forEach(square => {square.textContent = ''; square.classList.remove('winningSquare'); square.addEventListener('click', clickHandler, {once: true})})
+        singleSquares.forEach(square => {square.textContent = ''; square.classList.remove('winningSquare'); square.addEventListener('click', clickHandler, {once: true})});
     }
 
     communication.subscribe('winEvent', handleWin)
     communication.subscribe('gameLogicInitiated', drawBoard)
+    communication.subscribe('gameLogicInitiated', drawStats)
+    communication.subscribe('gameLogicInitiated', updateStats)
     communication.subscribe('clickEvent', drawSymbol)
+    communication.subscribe('turnSwapped', updateStats)
+    communication.subscribe('updateStats', updateStats)
+    communication.subscribe('drawEvent', createReplay)
 
     return { renderStartScreen }
 })()

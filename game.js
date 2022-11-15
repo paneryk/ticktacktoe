@@ -12,19 +12,21 @@ export const game = (() => {
         gridSize: 3,
         win: false,
         winner: null,
-        lastClickCords: null //[row, column] 
+        lastClickCords: null, //[row, column] 
+        turns: 1,
+        draw: false
     }
     let players = {}
-    const Player = (player, symbol) => { //player constructor
+    const Player = (player, symbol) => { 
         return { player, symbol, wins: 0 }
     }
-    const initGame = () => {
+    const initGame = (startingPlayer) => {
         const playerOneName = document.getElementById('playerOneName').value;
         const playerTwoName = document.getElementById('playerTwoName').value;
         const playerOneSymbol = document.getElementById('crossOne');
         
         createPlayers(playerOneName, playerTwoName, playerOneSymbol.checked ? 'x' : 'o', playerOneSymbol.checked ? 'o' : 'x')
-        gameStats.currentPlayer = players.playerOne;
+        gameStats.currentPlayer = startingPlayer === 1 ? players.playerOne : players.playerTwo;
         communication.publish('gameLogicInitiated', { gameStats, players })
     }
     const createPlayers = (nameOne, nameTwo, symbolOne, symbolTwo) => {
@@ -38,17 +40,19 @@ export const game = (() => {
         gameStats.lastClickCords = [clickedSquare.target.dataset.row, clickedSquare.target.dataset.column]
         gameStats.numberOfMoves += 1;
         communication.publish('clickEvent', { gameStats, clickedSquare, players });
-        checkForWin();
+        if (gameStats.numberOfMoves > 4) checkForGameOver();
         changeTurn();
+        communication.publish('turnSwapped', {gameStats, players})
     }
     const changeTurn = () => {
         gameStats.currentPlayer = (gameStats.currentPlayer === players.playerOne ? players.playerTwo : players.playerOne);
     }
-    const checkForWin = () => {
+    const checkForGameOver = () => {
         if (winInRow()) { handleWin(0); return true; }
         else if (winInColumn()) {handleWin(1); return true;}
         else if (winAcross()) {handleWin(2); return true;}
         else if (winCounterAcross()) {handleWin(3); return true;}
+        else if (checkForDraw()) {handleDraw(); return true;}
         else return false;
     }
     const winInColumn = function () {
@@ -85,9 +89,21 @@ export const game = (() => {
         else if (counterAcrossSequence.every(element => element === 'o')) { gameStats.win = true; gameStats.winner = gameStats.currentPlayer; }
         return gameStats.win;
     }
+    const checkForDraw = () => {
+        if (gameStats.numberOfMoves === 9) return true;
+        else return false;
+    }
     const handleWin = (direction) => {
         gameStats.winner === players.playerOne ? players.playerOne.wins += 1 : players.playerTwo.wins += 1
         communication.publish('winEvent', { gameStats, direction, players})
+        gameStats.turns += 1;
+        
+    }
+    const handleDraw = () => {
+        
+        gameStats.draw = true;
+        communication.publish('drawEvent')
+        gameStats.turns += 1;
     }
     const gameReplay = () => {
         console.log(players.playerOne);
@@ -97,6 +113,8 @@ export const game = (() => {
         gameStats.win = false;
         gameStats.winner = null;
         gameStats.lastClickCords = null;
+        gameStats.draw = false;
+        communication.publish('updateStats', {gameStats, players})
     }
 
     communication.subscribe('gameStart', initGame);
