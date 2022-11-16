@@ -11,6 +11,9 @@ export const ui = (() => {
         const circleOne = document.getElementById('circleOne');
         const circleTwo = document.getElementById('circleTwo');
 
+        const AIselection = document.getElementById('AIplayer');
+        const playerTwoForm = document.getElementById('playerTwoForm')
+
         const startingPlayerButton = document.getElementById('startingPlayerButton');
         const startingPlayerPar = document.querySelector('#startingPlayer');
         const startingPlayerSpan = document.querySelector('#startingPlayer span');
@@ -20,6 +23,9 @@ export const ui = (() => {
         })
         circleOne.addEventListener('change', () => {
             if (circleOne.checked) crossTwo.checked = true;
+        })
+        AIselection.addEventListener('change', () => {
+            playerTwoForm.classList.toggle('invisible');
         })
 
         let startingPlayer = 1;
@@ -32,7 +38,9 @@ export const ui = (() => {
 
         const startClick = (evt) => {
             evt.preventDefault(); 
-            communication.publish('gameStart', startingPlayer);
+            let AI = false;
+            if (AIselection.checked) AI = true;
+            communication.publish('gameStart', { startingPlayer, AI });
             renderStartScreen(false);
         }
         if (boolean) { 
@@ -46,20 +54,41 @@ export const ui = (() => {
     const clickHandler = (evt) => {
         communication.publish('handleClick', evt);
     }
+    const mouseOver = (evt) => {
+        evt.target.classList.add('mouseOver');
+        evt.target.textContent = game.gameStats.currentPlayer.symbol;
+    }
+    const mouseOut = (evt) => {
+        evt.target.classList.remove('mouseOver');
+        evt.target.textContent = '';
+    }
+    const hoverEffect = (square, action) => {
+        
+        if (action === 'add') {
+            square.addEventListener('mouseenter', mouseOver);
+            square.addEventListener('mouseleave', mouseOut);
+        }
+        if (action === 'remove') {
+            square.removeEventListener('mouseenter', mouseOver);
+            square.removeEventListener('mouseleave', mouseOut);
+        }
+    }
+
     const drawBoard = (object) => {
         const gameInterface = document.getElementById('interface');
 
-        for (let i=0; i<object.gameStats.gridSize; i++) {
+        for (let i=0; i<3; i++) {
             const rowDiv = document.createElement('div');
             rowDiv.classList.add('rowDiv');
             gameInterface.append(rowDiv);
 
-            for (let j=0; j<object.gameStats.gridSize; j++) {
+            for (let j=0; j<3; j++) {
                 const singleSquare = document.createElement('div');
                 singleSquare.classList.add('squareDiv');
                 singleSquare.setAttribute('data-row', i)
                 singleSquare.setAttribute('data-column', j)
                 singleSquare.addEventListener('click', clickHandler, {once: true})
+                hoverEffect(singleSquare, 'add')
                 rowDiv.append(singleSquare);
             }    
         }
@@ -84,15 +113,14 @@ export const ui = (() => {
         const pOne = document.querySelector('.playerOne');
         const turn = document.querySelector('.turn');
         const pTwo = document.querySelector('.playerTwo');
-        const statDiv = document.querySelector('.stats');
         turn.textContent = 'You\'re playing round number '+object.gameStats.turns
         pOne.textContent = object.players.playerOne.player + ' (' + object.players.playerOne.symbol + '): ' + object.players.playerOne.wins;
         pTwo.textContent = object.players.playerTwo.player + ' (' + object.players.playerTwo.symbol + '): ' + object.players.playerTwo.wins;
         if (object.gameStats.currentPlayer === object.players.playerOne) { pOne.classList.add('selected'); pTwo.classList.remove('selected');}
         else { pTwo.classList.add('selected');  pOne.classList.remove('selected');}
         if (object.gameStats.win === true || object.gameStats.draw === true) {
-            pOne.classList.remove('selected'); 
-            pTwo.classList.remove('selected');
+            (pOne, pTwo).classList.remove('selected'); 
+            
             if (object.gameStats.win === true) {
                 turn.textContent = 'The winner of turn no '+(object.gameStats.turns-1)+' is: '+object.gameStats.winner.player;
             }
@@ -102,27 +130,32 @@ export const ui = (() => {
         }
     }
 
-
     const drawSymbol = (object) => {
+        hoverEffect(object.clickedSquare.target, 'remove');
+        object.clickedSquare.target.classList.remove('mouseOver');
         object.clickedSquare.target.textContent = object.gameStats.currentPlayer.symbol;   
+
     }
     const handleWin = (object) => { //object.direction = {0: row, 1: column, 2: across, 3: counter-across}
         const singleSquares = document.querySelectorAll('.squareDiv');
-        singleSquares.forEach(square => square.removeEventListener('click', clickHandler))
+        singleSquares.forEach(square => {
+            square.removeEventListener('click', clickHandler);
+            hoverEffect(square, 'remove');
+        })
         
         if (object.direction === 0 || object.direction === 1) { 
             const winningSquares = document.querySelectorAll('[data-'+(object.direction===0?'row':'column')+'="'+object.gameStats.lastClickCords[object.direction]+'"]');
             winningSquares.forEach(square => square.classList.add('winningSquare'));
         }
         else if (object.direction === 2) { //across
-            for (let i=0; i<object.gameStats.gridSize; i++) {
+            for (let i=0; i<3; i++) {
             const winningSquare = document.querySelector('[data-row="'+i+'"][data-column="'+i+'"]');
             winningSquare.classList.add('winningSquare');
             }
         }
         else if (object.direction === 3) { //counter-across
-            for (let i=0; i<object.gameStats.gridSize; i++) {
-            const winningSquare = document.querySelector('[data-row="'+i+'"][data-column="'+(object.gameStats.gridSize-i-1)+'"]');
+            for (let i=0; i<3; i++) {
+            const winningSquare = document.querySelector('[data-row="'+i+'"][data-column="'+(3-i-1)+'"]');
             winningSquare.classList.add('winningSquare');
             }
         }
@@ -140,13 +173,20 @@ export const ui = (() => {
         replayButton.classList.add('replayButton');
         replayButton.textContent = 'Replay';
         gameInterface.append(replayButton);
-        replayButton.addEventListener('click', () => { communication.publish('gameReplay'); clearUI();  const button = document.querySelector('.replayButton'); button.remove(gameInterface)})
+        replayButton.addEventListener('click', () => { clearUI();communication.publish('gameReplay');   const button = document.querySelector('.replayButton'); button.remove(gameInterface)})
         
     }
     const clearUI = () => {
         const singleSquares = document.querySelectorAll('.squareDiv');
-        singleSquares.forEach(square => {square.textContent = ''; square.classList.remove('winningSquare'); square.addEventListener('click', clickHandler, {once: true})});
+        singleSquares.forEach(square => {
+            square.textContent = ''; 
+            square.classList.remove('winningSquare'); 
+            square.addEventListener('click', clickHandler, {once: true})
+            hoverEffect(square, 'add');
+        });
     }
+
+
 
     communication.subscribe('winEvent', handleWin)
     communication.subscribe('gameLogicInitiated', drawBoard)
@@ -156,6 +196,8 @@ export const ui = (() => {
     communication.subscribe('turnSwapped', updateStats)
     communication.subscribe('updateStats', updateStats)
     communication.subscribe('drawEvent', createReplay)
+
+    
 
     return { renderStartScreen }
 })()
