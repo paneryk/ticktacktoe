@@ -16,6 +16,7 @@ export const game = (() => {
         lastClickCords: null, //[row, column] 
         turns: 1,
         draw: false,
+        AImode: 'unbeatable'
     }
     let players = {}
     const Player = (player, symbol) => { 
@@ -58,52 +59,58 @@ export const game = (() => {
     }
     const changeTurn = () => {
         gameStats.currentPlayer = (gameStats.currentPlayer === players.playerOne ? players.playerTwo : players.playerOne);
-        
     }
     const checkForGameOver = (boardArray, gameStats) => {
-        if (winInRow(boardArray, gameStats)) { handleWin(0); return true; }
-        else if (winInColumn(boardArray, gameStats)) {handleWin(1); return true;}
-        else if (winAcross(boardArray, gameStats)) {handleWin(2); return true;}
-        else if (winCounterAcross(boardArray, gameStats)) {handleWin(3); return true;}
+        if (winInRow(boardArray, gameStats)) { gameStats.win = true; gameStats.winner = gameStats.currentPlayer; handleWin(0); return true; }
+        else if (winInColumn(boardArray, gameStats)) { gameStats.win = true; gameStats.winner = gameStats.currentPlayer; handleWin(1); return true;}
+        else if (winAcross(boardArray, gameStats)) {gameStats.win = true; gameStats.winner = gameStats.currentPlayer; handleWin(2); return true;}
+        else if (winCounterAcross(boardArray, gameStats)) {gameStats.win = true; gameStats.winner = gameStats.currentPlayer; handleWin(3); return true;}
         else if (checkForDraw(boardArray, gameStats)) {handleDraw(); return true;}
         else return false;
     }
-    const winInColumn = function (boardArray, gameStats) {
+    const winInColumn = function (boardArray) {
         for (let i=0; i<3; i++) {
             let rowSequence = [];
             boardArray.forEach(element => rowSequence.push(element[i]));
         if (rowSequence.every(element => element === 'x') || rowSequence.every(element => element === 'o')) 
-            { gameStats.win = true; gameStats.winner = gameStats.currentPlayer;  break;}
+            {  return true; break;}
         }
-        return gameStats.win;
     }
-    const winInRow = function (boardArray, gameStats) {
-        gameStats.win = boardArray.some(innerArray => {
+    const winInRow = function (boardArray) {
+        if (boardArray.some(innerArray => {
             if (innerArray.every(element => element === 'x') || innerArray.every(element => element === 'o')) 
-            { gameStats.winner = gameStats.currentPlayer; return true; }
-        })
-        return gameStats.win;
+            {  return true; }
+        })) return true;
+        else return false;
     }
-    const winAcross = (boardArray, gameStats) => {
+    const winAcross = (boardArray) => {
         let acrossSequence = [];
         for (let i=0; i<3; i++) {
             acrossSequence.push(boardArray[i][i]);
         }
-        if (acrossSequence.every(element => element === 'x')) { gameStats.win = true; gameStats.winner = gameStats.currentPlayer; }
-        else if (acrossSequence.every(element => element === 'o')) { gameStats.win = true; gameStats.winner = gameStats.currentPlayer; }
-        return gameStats.win;
+        if (acrossSequence.every(element => element === 'x')) { return true; }
+        else if (acrossSequence.every(element => element === 'o')) { return true; }
     }
-    const winCounterAcross = (boardArray, gameStats) => {
+    const winCounterAcross = (boardArray) => {
         let counterAcrossSequence = [];
         for (let i=0; i<3; i++) {
             counterAcrossSequence.push(boardArray[i][3-i-1])
         }
-        if (counterAcrossSequence.every(element => element === 'x')) { gameStats.win = true; gameStats.winner = gameStats.currentPlayer; }
-        else if (counterAcrossSequence.every(element => element === 'o')) { gameStats.win = true; gameStats.winner = gameStats.currentPlayer; }
-        return gameStats.win;
+        if (counterAcrossSequence.every(element => element === 'x')) { return true; }
+        else if (counterAcrossSequence.every(element => element === 'o')) { return true; }
     }
-    const checkForDraw = (boardArray, gameStats) => {
-        if (gameStats.numberOfMoves === 9) return true;
+    const checkForWin = (boardArray) => {
+        if (winInColumn(boardArray) || winInRow(boardArray) || winAcross(boardArray) || winCounterAcross(boardArray)) return true;
+        else return false;
+    }
+    const checkForDraw = (boardArray) => {
+        let tempBoard = [];
+        for (let i=0; i<3; i++) {
+            for (let j=0; j<3; j++) {
+                tempBoard.push(boardArray[i][j])
+            }
+        }
+        if (tempBoard.every(element => element !== 0)) return true;
         else return false;
     }
     const handleWin = (direction) => {
@@ -132,8 +139,6 @@ export const game = (() => {
     communication.subscribe('handleClick', clickHandler);
     communication.subscribe('gameReplay', gameReplay);
 
-    return {gameStats, checkForGameOver}
+    return {gameStats, checkForWin, checkForDraw}
 
 })()
-
-//alternate starting players (now based on the last move of the game)

@@ -119,8 +119,8 @@ export const ui = (() => {
         if (object.gameStats.currentPlayer === object.players.playerOne) { pOne.classList.add('selected'); pTwo.classList.remove('selected');}
         else { pTwo.classList.add('selected');  pOne.classList.remove('selected');}
         if (object.gameStats.win === true || object.gameStats.draw === true) {
-            (pOne, pTwo).classList.remove('selected'); 
-            
+            pOne.classList.remove('selected'); 
+            pOne.classList.remove('selected'); 
             if (object.gameStats.win === true) {
                 turn.textContent = 'The winner of turn no '+(object.gameStats.turns-1)+' is: '+object.gameStats.winner.player;
             }
