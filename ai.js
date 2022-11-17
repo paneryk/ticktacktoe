@@ -44,15 +44,14 @@ export const ai = (() => {
     }
 
     const minimax = (currentBoardArray, currentSymbol, players) => { //object {gameStats, boardArray, players}
-
-        if (game.checkForWin(currentBoardArray) === true && currentSymbol === players.playerTwo.symbol) return {score: 1}
-        else if (game.checkForWin(currentBoardArray) === true && currentSymbol === players.playerOne.symbol) return {score: -1}
+        if (game.checkForWin(currentBoardArray) === true && currentSymbol === players.playerTwo.symbol) return {score: -1} 
+        //if currentSymbol is AI's and win is detected - it means human player placed the last symbol so we need to return -1 to treat
+        //playerOne as minimizer
+        else if (game.checkForWin(currentBoardArray) === true && currentSymbol === players.playerOne.symbol) return {score: 1}
         else if (game.checkForDraw(currentBoardArray) === true) return {score: 0};
 
         const moves = []; //moves is an array [[cords, score], [cords, score], ...]
         let availableMoves = availableSquares(currentBoardArray);
-
-        
 
         for (let i=0; i<availableMoves.length; i++) {
 
@@ -71,14 +70,11 @@ export const ai = (() => {
             }
             currentBoardArray[availableMoves[i][0]][availableMoves[i][1]] = 0;
             moves.push(move)
-
         }
 
-        
-        
         let bestTestPlay = null;
 
-        if (currentSymbol === players.playerOne.symbol) { //moves is an array [[cords, score], [cords, score], ...]
+        if (currentSymbol === players.playerTwo.symbol) { //moves is an array [[cords, score], [cords, score], ...]
             let bestScore = -Infinity;
             for (let i=0; i<moves.length; i++) {
                 if (moves[i].score > bestScore) {
@@ -96,7 +92,6 @@ export const ai = (() => {
             }
         }
         return moves[bestTestPlay]
-
         }
 
         
