@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,55 +9,65 @@
     <script src="./main.js" defer type="module"></script>
     <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
     <form>
-        <fieldset>
-        <legend>Player 1:</legend>
-    
-            <label for="playerOneName">Name:</label>
-            <input type="text" id="playerOneName">
-    
-            <p>Select symbol:</p>
-    
+        <fieldset id="gameMode">
+            <legend>Select a game mode:</legend>
+
+            <input type="radio" id="twoPlayersMode" name="gameModeRadio">
+            <label for="twoPlayersMode">Play against another player</label>
+
+            <input type="radio" id="AImode" name="gameModeRadio">
+            <label for="AImode">Play against AI</label>
+        </fieldset>
+        <fieldset id="playerOneFieldset" class="invisible">
+            <legend class="playerOneHeading">Player 1 symbol:</legend>
+
             <input type="radio" id="crossOne" name="selectSymbolOne" value="x">
             <label for="crossOne">X</label>
-    
+
             <input type="radio" id="circleOne" name="selectSymbolOne" value="o">
             <label for="circleOne">O</label>
         </fieldset>
-    
-        <fieldset>
-        <legend>Player 2:</legend>
 
-            <input type="checkbox" id="AIplayer">
-            <label for="AIplayer">Play against AI</label> <br><br>
-            
+        <fieldset id="playerTwoFieldset" class="invisible">
+            <legend>Player 2 symbol:</legend>
+
             <div id="playerTwoForm">
-            <label for="playerTwoName">Name:</label>
-            <input type="text" id="playerTwoName">
-    
-            <p>Select symbol:</p>
-    
-            <input type="radio" id="crossTwo" name="selectSymbolTwo" value="x" disabled>
-            <label for="crossTwo">X</label>
-    
-            <input type="radio" id="circleTwo" name="selectSymbolTwo" value="o" disabled>
-            <label for="circleTwo">O</label>
-             </div>
+
+                <input type="radio" id="crossTwo" name="selectSymbolTwo" value="x" disabled>
+                <label for="crossTwo">X</label>
+
+                <input type="radio" id="circleTwo" name="selectSymbolTwo" value="o" disabled>
+                <label for="circleTwo">O</label>
+            </div>
         </fieldset>
-        <fieldset>
+        <fieldset id="AImodeFieldSet" class="invisible">
+            <legend>AI:</legend>
+
+            <input type="checkbox" id="AIplayer" class="invisible">
+            <label for="AIplayer" class="invisible">Play against AI</label>
+
+            <input type="radio" id="dummyAI" name="AImode">
+            <label for="dummyAI">Play against a 8 yo child</label><br>
+
+            <input type="radio" id="unbeatableAI" name="AImode">
+            <label for="unbeatableAI">Play against the game world champion</label>
+            </div>
+        </fieldset>
+        <fieldset id="drawStartingPlayer" class="invisible">
             <legend>Draw a starting player:</legend>
-                <button type="button" id="startingPlayerButton">Draw</button>
-                <p id="startingPlayer" class="invisible">Player <span></span> will start a game</p>
-            </fieldset>
-        
+            <button type="button" id="startingPlayerButton">Draw</button>
+            <span id="startingPlayer" class="invisible">Player <span></span> will start a game</p>
+        </fieldset>
+
         <br>
-        <button type="submit" id="startGameButton">Start a game</button>
-        </form>
+        <button type="submit" id="startGameButton" class="invisible">Start a game</button>
+    </form>
 
     <div id="interface"> </div>
 
-
-    
 </body>
+
 </html>
