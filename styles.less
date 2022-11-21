@@ -1,0 +1,513 @@
+@import url(https://fonts.googleapis.com/css2?family=Sono:wght@500&display=swap);
+@import url("https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
+
+@color-dark: black;
+@color-light: white;
+@bg-size-end: 4.4;
+@dur: 0.3s;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #57bd84;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Play", sans-serif;
+}
+
+h1 {
+  font-weight: 400;
+  margin-bottom: 50px;
+  font-size: 2.5rem;
+}
+
+.invisible {
+  position: absolute;
+  display: none;
+}
+
+.rowDiv {
+  width: 300px;
+  height: 100px;
+  display: flex;
+}
+
+.squareDiv {
+  font-family: Sono, sans-serif;
+  box-sizing: border-box;
+  width: 100px;
+  height: 100px;
+  border: 2px solid #b9e8ce;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  cursor: default;
+  color: #dbf2e5;
+  text-shadow: 1px 1px 1px #012812;
+}
+
+.opponent {
+  color: #367b54;
+}
+
+.squareDiv[data-row="0"] {
+  border-top: none;
+}
+
+.squareDiv[data-row="2"] {
+  border-bottom: none;
+}
+
+.squareDiv[data-column="0"] {
+  border-left: none;
+}
+
+.squareDiv[data-column="2"] {
+  border-right: none;
+}
+
+.mouseOver {
+  color: #76c799;
+  cursor: pointer;
+  text-shadow: none;
+}
+
+.winningSquare {
+  animation: winningSymbols 0.3s ease-in-out;
+}
+
+@keyframes winningSymbols {
+  0% {
+    font-size: 60px;
+  }
+
+  30% {
+    font-size: 85px;
+  }
+
+  60% {
+    font-size: 75px;
+  }
+
+  100% {
+    font-size: 60px;
+  }
+}
+
+.selected {
+  font-weight: 900;
+}
+
+fieldset {
+  border: 0;
+}
+
+input[id="twoPlayersMode"],
+input[id="AImode"] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+input[id="twoPlayersMode"]:checked + label::after,
+input[id="AImode"]:checked + label::after {
+  transform: scale(6);
+}
+
+label[for="twoPlayersMode"],
+label[for="AImode"] {
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  background-clip: content-box;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  color: black;
+  font-family: "Lato", sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.4px;
+  padding: 1rem 0.5rem;
+  border-radius: 4px;
+  border: 3px solid black;
+  background: white;
+  box-shadow: 0 3px 0 0 black;
+}
+
+label[for="twoPlayersMode"]::after,
+label[for="AImode"]::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transform: scale(0);
+  transition: transform 0.3s ease-in;
+  mix-blend-mode: difference;
+  background: radial-gradient(
+    circle at center,
+    white 24%,
+    black 25%,
+    black 100%
+  );
+}
+
+label[for="twoPlayersMode"]:hover,
+label[for="AImode"]:hover {
+  top: 3px;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+#mainWrapper {
+  width: 350px;
+  height: 100vh;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+#wrapperTape {
+  width: 1050px;
+  height: 100vh;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: flex-start;
+  transition: 0.3s ease-in-out 0.3s;
+}
+
+#startScreen,
+#optionScreen,
+#boardScreen {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  margin: 0 25px;
+  align-items: center;
+  min-height: 300px;
+}
+
+#boardScreen {
+  align-items: flex-start;
+}
+
+.optionsBody {
+  width: 100%;
+
+  display: flex;
+  flex-flow: column;
+
+  font-weight: 700;
+}
+
+.option {
+  width: 50%;
+  display: flex;
+  flex-flow: column;
+}
+
+.option + div {
+  padding: 0;
+  margin: 0;
+}
+
+fieldset {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-family: "Montserrat", sans-serif;
+}
+
+legend {
+  font-weight: 600;
+}
+
+.head {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+.swipeToCenter {
+  transform: translateX(-350px);
+}
+
+.swipeToLeft {
+  transform: translateX(-700px);
+}
+
+#interface {
+  min-height: 480px;
+  position: relative;
+}
+
+#winningLine {
+  content: "";
+  position: absolute;
+  transform-origin: left center;
+  width: 10px;
+  height: 10px;
+  background-color: rgb(42, 42, 42);
+  top: 50px;
+  left: 25px;
+  border-radius: 5px;
+}
+
+.grow(@to) {
+  from {
+    width: 10px;
+  }
+
+  to {
+    width: @to;
+  }
+}
+
+@keyframes straight {
+  .grow(250px);
+}
+
+@keyframes diagonal {
+  .grow(350px);
+}
+
+input[type="checkbox"] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+
+  &:checked + label {
+    background: #42b074;
+  }
+
+  &:checked + label:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+    content: "x";
+  }
+}
+
+label[for="crossOne"],
+label[for="crossTwo"],
+label[for="startingPlayer"] {
+  cursor: pointer;
+  width: 80px;
+  height: 35px;
+  border: 3px solid black;
+  display: block;
+  border-radius: 50px;
+  position: relative;
+  background-color: #8dd0ab;
+  margin-left: 40px;
+
+  &:after {
+    content: "o";
+    color: #fff;
+    position: absolute;
+    top: 2.5px;
+    left: 2.5px;
+    width: 30px;
+    height: 30px;
+    background-color: black;
+    border-radius: 45px;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &:after:after {
+    content: "X";
+  }
+
+  &:active:after {
+    width: 40px;
+  }
+}
+
+input[type="radio"] {
+  width: 0;
+  height: 0;
+  visibility: hidden;
+
+  &:checked + label[for="dummyAI"]::before,
+  &:checked + label[for="unbeatableAI"]::before {
+    background-color: #42b074;
+  }
+
+  &:checked + label[for="dummyAI"]::after,
+  &:checked + label[for="unbeatableAI"]::after {
+    visibility: visible;
+  }
+}
+
+label[for="dummyAI"],
+label[for="unbeatableAI"] {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+label[for="dummyAI"]::before,
+label[for="unbeatableAI"]::before {
+  display: block;
+  content: "";
+  width: 30px;
+  height: 30px;
+  background-color: #8dd0ab;
+  border-radius: 30px;
+  border: 3px solid black;
+}
+
+label[for="dummyAI"]::after,
+label[for="unbeatableAI"]::after {
+  content: "";
+  width: 24px;
+  height: 24px;
+  top: 6px;
+  left: 6px;
+  display: block;
+  background-color: black;
+  border-radius: 20px;
+  position: absolute;
+  visibility: hidden;
+}
+
+#returnToStartScreen,
+#endGame {
+  width: 40px;
+  height: 40px;
+  background-color: #42b074;
+  border-radius: 40px;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 50px;
+
+  &:hover {
+    background-color: #8dd0ab;
+  }
+}
+
+#returnToStartScreen > span {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+}
+
+#endGame > span {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+}
+
+#startGameButton,
+.replayButton {
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  background-clip: content-box;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  color: black;
+  font-family: "Lato", sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.4px;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: 3px solid black;
+  background: white;
+  box-shadow: 0 3px 0 0 black;
+  margin-top: 50px;
+  width: 100%;
+
+  &:active {
+    top: 3px;
+    box-shadow: none;
+    overflow: hidden;
+  }
+
+  &:hover::after {
+    transform: scale(6);
+  }
+}
+
+.replayButton {
+  margin-top: 0;
+}
+
+#startGameButton::after,
+.replayButton::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transform: scale(0);
+  transition: transform 0.3s ease-in;
+  mix-blend-mode: difference;
+  background: radial-gradient(
+    circle at center,
+    white 24%,
+    black 25%,
+    black 100%
+  );
+}
+
+.stats {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.playerOne,
+.playerTwo {
+  display: flex;
+  width: 50%;
+  flex-shrink: 0;
+  flex-grow: 0;
+  font-size: 24px;
+  box-sizing: border-box;
+}
+
+.playerOne {
+  justify-content: flex-end;
+}
+
+.playerTwo {
+  padding-left: 0.3em;
+}
+
+.turn {
+  width: 100%;
+  display: flex;
+  margin: 20px 0;
+  justify-content: center;
+  font-size: 18px;
+}

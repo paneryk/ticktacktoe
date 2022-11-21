@@ -25,19 +25,18 @@ export const ai = (() => {
         computation.currentTime = Math.floor(endTime - startTime);
         const calculatedMove = document.querySelector(
           '[data-row="' +
-            bestMove.cords[0] +
-            '"][data-column="' +
-            bestMove.cords[1] +
-            '"]'
+          bestMove.cords[0] +
+          '"][data-column="' +
+          bestMove.cords[1] +
+          '"]'
         );
         calculatedMove.click();
-        communication.publish("AIcomputation", computation);
         console.log(
           "Analysed " +
-            computation.currentCount +
-            " games in " +
-            computation.currentTime +
-            "ms"
+          computation.currentCount +
+          " games in " +
+          computation.currentTime +
+          "ms"
         );
         computation.currentCount = 0;
       } else if (object.gameStats.AImode === "dummy") {
@@ -45,10 +44,10 @@ export const ai = (() => {
         let randomMove = Math.floor(Math.random() * optionalMoves.length);
         const calculatedMove = document.querySelector(
           '[data-row="' +
-            optionalMoves[randomMove][0] +
-            '"][data-column="' +
-            optionalMoves[randomMove][1] +
-            '"]'
+          optionalMoves[randomMove][0] +
+          '"][data-column="' +
+          optionalMoves[randomMove][1] +
+          '"]'
         );
         calculatedMove.click();
       }
@@ -73,9 +72,9 @@ export const ai = (() => {
       computation.currentCount += 1;
       return { score: -1 };
     } else if (
-    /* if currentSymbol is AI's and win is detected - it means human player placed the 
-    last symbol so we need to return -1 to treat
-    playerOne as minimizer */
+      /* if currentSymbol is AI's and win is detected - it means human player placed the 
+      last symbol so we need to return -1 to treat
+      playerOne as minimizer */
       game.checkForWin(currentBoardArray) === true &&
       currentSymbol === players.playerOne.symbol
     ) {

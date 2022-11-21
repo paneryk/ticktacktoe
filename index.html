@@ -7,67 +7,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A TickTackToe Game</title>
     <script src="./main.js" defer type="module"></script>
-    <link rel="stylesheet" href="./style.css">
+    <!-- <link rel="stylesheet" href="./style.css"> -->
+    <link rel="stylesheet/less" type="text/css" href="./styles.less" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <script src="https://cdn.jsdelivr.net/npm/less"></script>
 </head>
 
 <body>
-    <form>
-        <fieldset id="gameMode">
-            <legend>Select a game mode:</legend>
+    <div id="mainWrapper">
+        <div id="wrapperTape">
+            <div id="startScreen">
+                <h1>tick<strong>tack</strong>toe</h1>
+                <form>
+                    <fieldset id="gameMode">
+                        <div>
+                            <input type="radio" id="twoPlayersMode" name="gameModeRadio" />
+                            <label for="twoPlayersMode">Play against another player</label>
 
-            <input type="radio" id="twoPlayersMode" name="gameModeRadio">
-            <label for="twoPlayersMode">Play against another player</label>
-
-            <input type="radio" id="AImode" name="gameModeRadio">
-            <label for="AImode">Play against AI</label>
-        </fieldset>
-        <fieldset id="playerOneFieldset" class="invisible">
-            <legend class="playerOneHeading">Player 1 symbol:</legend>
-
-            <input type="radio" id="crossOne" name="selectSymbolOne" value="x">
-            <label for="crossOne">X</label>
-
-            <input type="radio" id="circleOne" name="selectSymbolOne" value="o">
-            <label for="circleOne">O</label>
-        </fieldset>
-
-        <fieldset id="playerTwoFieldset" class="invisible">
-            <legend>Player 2 symbol:</legend>
-
-            <div id="playerTwoForm">
-
-                <input type="radio" id="crossTwo" name="selectSymbolTwo" value="x" disabled>
-                <label for="crossTwo">X</label>
-
-                <input type="radio" id="circleTwo" name="selectSymbolTwo" value="o" disabled>
-                <label for="circleTwo">O</label>
+                            <input type="radio" id="AImode" name="gameModeRadio" />
+                            <label for="AImode">Play against AI</label>
+                        </div>
+                    </fieldset>
             </div>
-        </fieldset>
-        <fieldset id="AImodeFieldSet" class="invisible">
-            <legend>AI:</legend>
+            <div id="optionScreen">
+                <div class="head">
+                    <button id="returnToStartScreen" type="button">
+                        <span class="material-symbols-outlined">
+                            arrow_back_ios
+                        </span>
+                    </button>
+                </div>
+                <div class="optionsBody">
+                    <fieldset id="playerOneFieldset" class="invisible">
+                        <div class="option">
+                            <legend class="playerOneHeading">Warrior 1:</legend>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="crossOne" name="selectSymbolOne" value="x">
+                            <label for="crossOne"></label>
+                        </div>
+                    </fieldset>
 
-            <input type="checkbox" id="AIplayer" class="invisible">
-            <label for="AIplayer" class="invisible">Play against AI</label>
-
-            <input type="radio" id="dummyAI" name="AImode">
-            <label for="dummyAI">Play against a 8 yo child</label><br>
-
-            <input type="radio" id="unbeatableAI" name="AImode">
-            <label for="unbeatableAI">Play against the game world champion</label>
+                    <fieldset id="playerTwoFieldset" class="invisible">
+                        <div class="option">
+                            <legend>Warrior 2:</legend>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="crossTwo" name="selectSymbolTwo" value="x" checked>
+                            <label for="crossTwo"></label>
+                        </div>
+                    </fieldset>
+                    <fieldset id="drawStartingPlayer" class="invisible">
+                        <div class="option">
+                            <legend>Starting player:</legend>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="startingPlayer" name="startingPlayer">
+                            <label for="startingPlayer"></label>
+                        </div>
+                    </fieldset>
+                </div>
+                <fieldset id="AImodeFieldSet" class="invisible">
+                    <div class="option" style="width: 30%">
+                        <legend>AI Mode:</legend>
+                    </div>
+                    <input type="checkbox" id="AIplayer" class="invisible">
+                    <label for="AIplayer" class="invisible">Your symbol:</label>
+                    <div class="option" style="width: 70%">
+                        <div>
+                            <input type="radio" id="dummyAI" name="AImode">
+                            <label for="dummyAI">Average kid of age 7</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="unbeatableAI" name="AImode" checked>
+                            <label for="unbeatableAI">Game world master</label>
+                        </div>
+                    </div>
+                </fieldset>
+                <br>
+                <button type="submit" id="startGameButton" class="invisible">Start a game</button>
             </div>
-        </fieldset>
-        <fieldset id="drawStartingPlayer" class="invisible">
-            <legend>Draw a starting player:</legend>
-            <button type="button" id="startingPlayerButton">Draw</button>
-            <span id="startingPlayer" class="invisible">Player <span></span> will start a game</p>
-        </fieldset>
-
-        <br>
-        <button type="submit" id="startGameButton" class="invisible">Start a game</button>
-    </form>
-
-    <div id="interface"> </div>
-
+            </form>
+            <div id="boardScreen">
+                <button id="endGame" type="submit"><span class="material-symbols-outlined">
+                        close
+                    </span></button>
+                <div id="interface"> </div>
+            </div>
+        </div>
+    </div>
 </body>
-
 </html>

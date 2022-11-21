@@ -30,8 +30,12 @@ export const game = (() => {
     );
     if (o.AI === true) gameStats.AImode = o.AImode;
 
-    gameStats.currentPlayer =
-      o.startingPlayer === 1 ? players.playerOne : players.playerTwo;
+    if (o.startingPlayer === 1) {
+      gameStats.currentPlayer = players.playerOne.symbol === 'x' ? players.playerOne : players.playerTwo;
+    } else if (o.startingPlayer === 2) {
+      gameStats.currentPlayer = players.playerOne.symbol === 'x' ? players.playerTwo : players.playerOne;
+    }
+
     gameStats.prevStartPlayer = gameStats.currentPlayer;
     communication.publish("gameLogicInitiated", { gameStats, players });
     if (!!gameStats.AImode && gameStats.currentPlayer === players.playerTwo)
