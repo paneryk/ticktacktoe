@@ -1,22 +1,18 @@
-1. html and css
-    - A simple form to input names of the players and select their symbols PLUS a random function to select a starting person
-    - A three by three board of divs with attributes: dataset-row (0;2) and dataset-column(0;2)
-2. a Game module:
-    - create players (factory function) {name, symbol, Boolean(turn)} - take data from a form and create two objects
-    - initialize the game 
-        - add eventlistener (click) to all the divs (once: true) 
-        - create an array of the board boardArray = [ [0, 0, 0], [0, 0, 0], [0, 0, 0]] ([cord-row], [cord-col])
-    - eventlistener onlick event fires function onMove(player, clickeddiv) which in turn:
-        - checks for a gameOver: a win or a draw
-        - if not gameOver - draws an appropriate symbol (x or o) AND adds it to the boardArray
-        - changes the turn and displays a current player
-    - gamOver function:
-        - checkForWin
-        - checkForDraw
-    - checkForWin:
-        - check for rows:
-            for (i=0, i<dimension, i++)
-            boardArray[i].forEach(element => element === 'x' || 'o') if so - return 'element' and break
-        - check for columns:
-            boardArray.forEach(innerArray => innerArray[i] === 'x' || 'o') - if so return 'innerArray[i]' and break
+# TickTackToe Game
+
+A simple tick tack toe game for one or two players and two difficulty modes of a computer player.
+
+Build as a part of [The Odin Project](https://www.theodinproject.com/) JS curriculumm.
+
+
+## Demo
+See it's **[live demo](https://paneryk.github.io/ticktacktoe/)**
+
+## Skills put into practice
+- A minimax algorithm and it's application to create an unbeatable computer player
+- A pubsub (publisher-subscriber) pattern (it made many concepts unnecessarily overcomplicated as it's not the best project to apply it to - anyways, wanted to give it a try),
+- Modular design pattern
+- Better grasp of arrays, objects, factory functions
+- Basic CSS animations and application of LESS
+
 
